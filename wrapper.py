@@ -9,6 +9,8 @@ os.chdir("./PipelineProject_Ben_Moginot")
 
 log = open("PipelineProject.log", "w")
 
+### EFETCH FOR TARGET ORGANISM SOMEHOW MAYBE
+
 acc = "NC_006273.2"
 os.mkdir("temp") # store ncbi datasets temporarily
 os.chdir("temp")
