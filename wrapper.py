@@ -1,6 +1,10 @@
 import os
 import glob
 
+
+### TPMS AND NAN BECAUSE INPUT IS NUC AND INDEX IS PROT; GET DNA SEQUENCES FROM DATASETS & REBUILD INDEX ###
+
+
 os.chdir("./PipelineProject_Ben_Moginot")
 
 log = open("PipelineProject.log", "w")
