@@ -1,24 +1,29 @@
 import os
 import glob
+import subprocess
+import re
 
+os.system("rm -r PipelineProject_Ben_Moginot/*")
 
-### TPMS AND NAN BECAUSE INPUT IS NUC AND INDEX IS PROT; GET DNA SEQUENCES FROM DATASETS & REBUILD INDEX ###
-
-
-os.chdir("./PipelineProject_Ben_Moginot")
+os.chdir("PipelineProject_Ben_Moginot")
 
 log = open("PipelineProject.log", "w")
 
-### EFETCH FOR TARGET ORGANISM SOMEHOW MAYBE
+### EFETCH FOR TARGET ORGANISM SOMEHOW MAYBE ###
 
-acc = "NC_006273.2"
+acc = "GCA_000845245.1"
 os.mkdir("temp") # store ncbi datasets temporarily
 os.chdir("temp")
-os.system(f"datasets download gene accession {acc}") # get all protein sequences for herpesvirus
+os.system(f"datasets download genome accession {acc} --include cds") # get all protein sequences for herpesvirus
 os.system("unzip ncbi_dataset.zip")
-os.system("mv ncbi_dataset/data/protein.faa ../herpes.fasta") # get fasta file
+os.system(f"mv ncbi_dataset/data/{acc}/cds_from_genomic.fna ../herpes.fasta") # get fasta file
 os.chdir("..")
 os.system("rm -r temp") # get rid of everything else
+
+with open("herpes.fasta") as f: # count number of CDS
+    cds = len(re.findall(">", f.read()))
+
+log.write(f"The HCMV genome (NC_006273.2) has {str(cds)} CDS") # append to log
 
 index = "herpes.idx"
 os.system(f"kallisto index -i {index} herpes.fasta") # build kallisto index from protein sequences
