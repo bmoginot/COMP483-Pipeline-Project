@@ -3,6 +3,7 @@
 ## Dependencies
 Python 3.10.12  
 R 4.4.2  
+[BioPython](https://biopython.org/wiki/Download)  
 [kallisto](https://pachterlab.github.io/kallisto/download)  
 [sleuth](https://pachterlab.github.io/sleuth/download)  
 [bowtie2](https://github.com/BenLangmead/bowtie2)  
@@ -17,4 +18,4 @@ Test data runs with accession number `NC_006273.2`
 
 ## Overview
 ### Step 1
-etc., etc.
+Move into repo via `cd COMP483-Pipeline-Project`
