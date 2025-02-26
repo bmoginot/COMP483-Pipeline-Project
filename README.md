@@ -12,11 +12,21 @@ R 4.4.2
 [BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)  
 
 ## Required Data
-The pipeline takes as input a folder of fastq files and the GenBank accession number for a reference genome  
-I used `prefetch` and `fasterq-dump` from [sra-tools](https://github.com/ncbi/sra-tools)  
-Test data can be found in `testdata`  
-Test data runs with accession number `NC_006273.2`  
+This pipeline takes a folder of paired-end fastq files as input  
+I used `prefetch` and `fasterq-dump` from [sra-tools](https://github.com/ncbi/sra-tools) to retrieve the test data  
+Test data can be found in `testdata`   
 
-## Overview
-### Step 1
-Move into repo via `cd COMP483-Pipeline-Project`
+## How to Run
+After cloning the repo, move into it via
+```
+cd COMP483-Pipeline-Project
+```
+Run the pipeline with
+```
+python wrapper.py -i input_data_dir
+```
+For example, to run the test data, use
+```
+cd COMP483-Pipeline-Project
+python wrapper.py -i testdata
+```
