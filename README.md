@@ -2,10 +2,11 @@
 
 ## Dependencies
 Python 3.10.12  
+    [BioPython](https://biopython.org/wiki/Download)  
+    [pandas](https://pandas.pydata.org/docs/getting_started/install.html)
 R 4.4.2  
-[BioPython](https://biopython.org/wiki/Download)  
+    [sleuth](https://pachterlab.github.io/sleuth/download)  
 [kallisto](https://pachterlab.github.io/kallisto/download)  
-[sleuth](https://pachterlab.github.io/sleuth/download)  
 [bowtie2](https://github.com/BenLangmead/bowtie2)  
 [SPAdes](https://github.com/ablab/spades)  
 [BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)  
