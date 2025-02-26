@@ -4,6 +4,15 @@ import subprocess
 import re
 import pandas as pd
 from Bio import SeqIO
+import argparse
+import sys
+
+def check_arg(args=None):
+    parser = argparse.ArgumentParser(description="run pipeline")
+    parser.add_argument("-i", "--input",
+    help="input directory containing paired-end fastq files",
+    required=True)
+    return parser.parse_args(args)
 
 def download_cds(acc):
     os.mkdir("tmp") # store ncbi datasets temporarily
@@ -23,11 +32,11 @@ def count_cds(log):
         l.write(f"The HCMV genome (NC_006273.2) has {str(cds)} CDS\n\n")
     return
 
-def run_kallisto(ind):
+def run_kallisto(ind, data):
     index = f"{ind}.idx"
     os.system(f"kallisto index -i {index} HCMV_cds.fq") # build kallisto index from protein sequences
     os.mkdir("kallisto_results")
-    paths = sorted(glob.glob("../testdata/*")) # get all fastq files
+    paths = sorted(glob.glob(f"{data}/*")) # get all fastq files
     for i in range(0, len(paths), 2): # get each pair of files
         pair1 = paths[i]
         pair2 = paths[i+1]
@@ -73,11 +82,11 @@ def write_diff_exp(log):
     with open(log, "a") as l:
         l.write("\n")
 
-def run_bowtie(ind):
+def run_bowtie(ind, data):
     os.mkdir("bowtie_results")
     os.chdir("bowtie_results")
     os.system(f"bowtie2-build ../HCMV_ref.fq {ind}") # build bowtie reference
-    paths = sorted(glob.glob("../../testdata/*"))
+    paths = sorted(glob.glob(f"{data}/*"))
     for i in range(0, len(paths), 2): # get each pair of files
         pair1 = paths[i]
         pair2 = paths[i+1]
@@ -85,10 +94,10 @@ def run_bowtie(ind):
         os.system(f"bowtie2 --quiet -x {ind} -1 {pair1} -2 {pair2} -S {tag}map.sam --al-conc {tag}_mapped.fq") # run bowtie on each pair
     os.chdir("..")
 
-def compare_read_counts(log):
+def compare_read_counts(log, data):
     donors = ["Donor 1", "Donor 1", "Donor 3", "Donor 3"]
     conditions = ["2dpi", "6dpi", "2dpi", "6dpi"]
-    unfilt = sorted(glob.glob("../testdata/*_1_test.fq"))
+    unfilt = sorted(glob.glob(f"{data}/*_1.fq"))
     mapped = sorted(glob.glob("bowtie_results/*.1.fq"))
     for i in range(len(mapped)):
         with open(unfilt[i]) as f:
@@ -173,8 +182,15 @@ def parse_blast(log):
 
 
 def main():
-    os.mkdir("PipelineProject_Ben_Moginot")
-    os.chdir("PipelineProject_Ben_Moginot")
+    args = check_arg(sys.argv[1:])
+    cwd = os.getcwd()
+    data = os.path.join(cwd, args.input)
+
+    outdir = "PipelineProject_Ben_Moginot"
+    if os.path.isdir(outdir):
+        os.system(f"rm -r {outdir}")
+    os.mkdir(outdir)
+    os.chdir(outdir)
 
     log = "PipelineProject.log"
 
@@ -184,14 +200,14 @@ def main():
     download_cds(acc)
     count_cds(log)
 
-    run_kallisto(ind)
+    run_kallisto(ind, data)
     write_tpm_stats(log)
 
     run_sleuth()
     write_diff_exp(log)
 
-    run_bowtie(ind)
-    compare_read_counts(log)
+    run_bowtie(ind, data)
+    compare_read_counts(log, data)
 
     run_spades(log)
 
